@@ -16,17 +16,25 @@
                             <th>Candidate dates</th>
                             <th>{{ $user->name }}</th>
                         </tr>
-                        @forelse ($candidate as $value)
+                        @foreach ($candidate as $value)
                             <tr>
                                 <td><a>{{ $value->candidateName }}</a></td>
-                                <td><a>1</a></td>
+                                <td>
+                                @foreach ($availability as $value)
+                                    <a>{{ $value->availability }}</a>
+                                @endforeach
+                                </td>
                             </tr>
-                        @empty
-                            <TR>
-                                <td>No schedule yet.</td>
-                                <td>-</td>
-                            </TR>
-                        @endforelse
+                        @endforeach
+                        <td></td>
+                        @foreach ($user as $value)
+                        <td>
+                            <form method="post" action="{{ url('/', $schedule->scheduleId) }}">
+                                {{ csrf_field() }}
+                                <textarea name="comment" placeholder="add comments"></textarea>
+                            </form>
+                        </td>
+                        @endforeach
                     </table> 
                 </div>
             </div>

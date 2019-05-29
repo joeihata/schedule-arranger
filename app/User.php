@@ -27,13 +27,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function availability() {
+    public function availabilities() {
         return $this->hasMany('App\Availability');
     }
-    public function schedule() {
+    public function schedules() {
         return $this->hasMany('App\Schedule');
     }
-    public function comment() {
+    public function comments() {
         return $this->hasMany('App\Comment');
     }
 }

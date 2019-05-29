@@ -14,7 +14,9 @@ class CreateCommentsTable extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->uuid('scheduleId');
+            $table->integer('userId');
+            $table->string('comment');
             $table->timestamps();
         });
     }

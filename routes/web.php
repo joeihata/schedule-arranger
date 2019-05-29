@@ -21,5 +21,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 //新規スケジュール作成のためのルート設定
 Route::get('/new', 'SchedulesController@create');
 Route::post('post', 'SchedulesController@store');
+Route::delete('/posts/{scheduleId}', 'SchedulesController@destroy');
 //記事の詳細画面のルーティング
 Route::get('/{scheduleId}', 'SchedulesController@show');
+//記事の編集画面へのルーティング
+Route::get('/{scheduleId}/edit', 'SchedulesController@edit');
+Route::patch('/{scheduleId}', 'SchedulesController@update');

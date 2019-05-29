@@ -20,11 +20,21 @@
                         <tr>
                             <th>Schedule Name</th>
                             <th>Updated date</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
                         @forelse ($schedules as $schedule)
                             <tr>
                                 <td><a href="{{ action('SchedulesController@show', $schedule) }}">{{ $schedule->scheduleName }}</a></td>
-                                <td><a>{{ $schedule->updated_at }}</a></td>
+                                <td>{{ $schedule->updated_at }}</td>
+                                <td><a href="{{ action('SchedulesController@edit', $schedule) }}" class="edit">[ edit ]</a></td>
+                                <td>
+                                    <form method="post" action="{{ url('/posts', $schedule->scheduleId) }}" id="form_{{ $schedule->scheduleId }}">
+                                        <input type="submit" class="del" data-id="{{ $schedule->scheduleId }}" value="[ delete ]">
+                                        {{ method_field('delete') }}
+                                        {{ csrf_field() }}
+                                    </form>
+                                </td>
                             </tr>
                         @empty
                             <TR>
@@ -38,4 +48,5 @@
         </div>
     </div>
 </div>
+
 @endsection

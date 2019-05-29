@@ -8,10 +8,10 @@ class Availability extends Model
 {
     protected $primaryKey = 'candidateId';
     public function user() {
-        return $this->belongsTo('App\User', 'userId');
+        return $this->belongsTo('App\User', 'userId', 'userId');
     }
 
     public function candidate() {
-        return $this->belongsTo('App\Candidate', 'candidateId');
+        return $this->belongsTo('App\Candidate', 'candidateId', 'candidateId');
     }
 }
