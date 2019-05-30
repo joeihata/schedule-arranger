@@ -23,6 +23,7 @@
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
+                        
                         @forelse ($schedules as $schedule)
                             <tr>
                                 <td><a href="{{ action('SchedulesController@show', $schedule) }}">{{ $schedule->scheduleName }}</a></td>

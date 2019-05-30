@@ -14,27 +14,40 @@
                         <caption>Compare availabilities of participants</caption>
                         <tr>
                             <th>Candidate dates</th>
-                            <th>{{ $user->name }}</th>
+                            <th>
+                                {{ $user->name }}
+                                <a href="{{ action('AvailabilityEditController@edit', $schedule) }}" class="edit">[ Availability edit ]</a>
+                            </th>
                         </tr>
-                        @foreach ($candidate as $value)
+                        @foreach ($array as $key => $value)
                             <tr>
-                                <td><a>{{ $value->candidateName }}</a></td>
+                                <td><p>{{ $key}}</p></td>
                                 <td>
-                                @foreach ($availability as $value)
-                                    <a>{{ $value->availability }}</a>
-                                @endforeach
+                                    <p>{{ $value }}</p>
                                 </td>
                             </tr>
                         @endforeach
                         <td></td>
-                        @foreach ($user as $value)
                         <td>
-                            <form method="post" action="{{ url('/', $schedule->scheduleId) }}">
+                        @if ($comment)
+                            @foreach( $comment as $value)
+                                <p>{{ $value->comment }}</p><br>
+                            @endforeach
+                            <form method="post" action="{{ url('/post/comment', $schedule->scheduleId) }}">
                                 {{ csrf_field() }}
                                 <textarea name="comment" placeholder="add comments"></textarea>
+                                <br>
+                                <button type="submit" value="Update">Add Comment</button>
                             </form>
+                        @else 
+                            <form method="post" action="{{ url('/post/comment', $schedule->scheduleId) }}">
+                                {{ csrf_field() }}
+                                <textarea name="comment" placeholder="add comments"></textarea>
+                                <br>
+                                <button type="submit" value="Update">Add Comment</button>
+                            </form>
+                        @endif
                         </td>
-                        @endforeach
                     </table> 
                 </div>
             </div>

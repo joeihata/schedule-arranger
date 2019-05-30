@@ -23,19 +23,21 @@ class SchedulesController extends Controller
         $user = User::findOrFail(Auth::id());
         $candidates = Schedule::findOrFail($scheduleId)->candidates;
         $availabilities = Schedule::findOrFail($scheduleId)->availabilities;
-        //$comment = Schedule::findOrFail($scheduleId)->comment;
-        $availabilityArray = [];
+        $comment = Schedule::findOrFail($scheduleId)->comments;
+        $array = [];
         foreach ($candidates as $value) {
-            $availabilityArray = $value->candidateName;
+            $candidateName = $value->candidateName;
             $availability = Schedule::findOrFail($scheduleId)->availabilities->first();
-            $availabilityArray = $availability->availability;
+            $availability = $availability->availability;
+            $array[$candidateName] = $availability;
         }
         return view('show')->with([
             'schedule' => $schedule,
             'candidate' => $candidates,
             'user' => $user,
             'availability' => $availabilities,
-            //'comment' => $comment
+            'array' => $array,
+            'comment' => $comment
             ]);
     }
 
@@ -66,7 +68,7 @@ class SchedulesController extends Controller
                     $user = User::findOrFail(Auth::id());                    
                     $availability->candidateId = $candidate->candidateId;
                     $availability->userId = $user->id;
-                    $availability->availability = 0;
+                    $availability->availability = '欠席';
                     $availability->scheduleId = $schedule->scheduleId;
                     $availability->save();
             }
@@ -78,20 +80,17 @@ class SchedulesController extends Controller
         $user = User::findOrFail(Auth::id());
         $candidates = Schedule::findOrFail($scheduleId)->candidates;
         $availabilities = Schedule::findOrFail($scheduleId)->availabilities;
-        //$comment = Schedule::findOrFail($scheduleId)->comment;
         $availabilityArray = [];
         foreach ($candidates as $value) {
             $availabilityArray = $value->candidateName;
             $availability = Schedule::findOrFail($scheduleId)->availabilities->first();
             $availabilityArray = $availability->availability;
         }
-        //dd($candidates);
         return view('edit')->with([
             'schedule' => $schedule,
             'candidate' => $candidates,
             'user' => $user,
             'availability' => $availabilities,
-            //'comment' => $comment
             ]);
     }
 
