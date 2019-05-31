@@ -19,15 +19,24 @@
                         placeholder="enter the schedule name that you want to arrange"
                         value="{{ old('scheduleName', $schedule->scheduleName) }}"
                       >
+                      @if ($errors->has('scheduleName'))
+                      <span class="error">{{ $errors->first('scheduleName') }}</span>
+                      @endif
                     </div>
                     <div>
                       <h5>Memo</h5>
                       <textarea name="memo" placeholder="add some memo">{{ old('memo', $schedule->memo) }}</textarea>
+                      @if ($errors->has('memo'))
+                      <span class="error">{{ $errors->first('memo') }}</span>
+                      @endif
                     </div>
                     <div>
                       <h5>Candidate Dates</h5>
                       <p>You should make new line to listup candidate dates.</p>
                       <textarea name="candidates" placeholder="add candidate dates">@foreach($candidate as $value){{old('', $value->candidateName)}}@endforeach</textarea>
+                      @if ($errors->has('candidates'))
+                      <span class="error">{{ $errors->first('candidates') }}</span>
+                      @endif
                     </div>
                     <button type="submit" value="Update">Edit Schedule</button>
                   </form>
@@ -39,5 +48,6 @@
           </div>
         </div>
     </div>
+
 </div>
 @endsection

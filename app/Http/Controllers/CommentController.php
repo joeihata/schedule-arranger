@@ -14,6 +14,9 @@ use Webpatser\Uuid\Uuid;
 class CommentController extends Controller
 {
     public function store(Request $request, $scheduleId) {
+        $this->validate($request, [
+            'comment' => 'required',
+        ]);
         $comments = new Comment();
             $comments->scheduleId = $scheduleId;
             $comments->userId = Auth::id();

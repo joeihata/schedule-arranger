@@ -52,6 +52,11 @@ class SchedulesController extends Controller
     }
 
     public function store(Request $request) {
+        $this->validate($request, [
+            'scheduleName' => 'required',
+            'memo' => 'required',
+            'candidates' => 'required',
+        ]);
         $schedule = new Schedule();
             $schedule->scheduleId = Uuid::generate()->string;
             $rows = explode("\r\n", $request->candidates);
@@ -76,6 +81,11 @@ class SchedulesController extends Controller
     }
 
     public function edit($scheduleId) {
+        $this->validate($request, [
+            'scheduleName' => 'required',
+            'memo' => 'required',
+            'candidates' => 'required',
+        ]);
         $schedule = Schedule::findOrFail($scheduleId);
         $user = User::findOrFail(Auth::id());
         $candidates = Schedule::findOrFail($scheduleId)->candidates;
@@ -83,7 +93,7 @@ class SchedulesController extends Controller
         $availabilityArray = [];
         foreach ($candidates as $value) {
             $availabilityArray = $value->candidateName;
-            $availability = Schedule::findOrFail($scheduleId)->availabilities->first();
+            $availability = Candidate::findOrFail($value->candidateId)->availability;
             $availabilityArray = $availability->availability;
         }
         return view('edit')->with([

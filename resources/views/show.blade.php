@@ -37,12 +37,21 @@
                                 {{ csrf_field() }}
                                 <textarea name="comment" placeholder="add comments"></textarea>
                                 <br>
+                                @if ($errors->has('comment'))
+                                    <span class="error">{{ $errors->first('comment') }}</span>
+                                @endif
+                                <br>
                                 <button type="submit" value="Update">Add Comment</button>
+                                
                             </form>
                         @else 
                             <form method="post" action="{{ url('/post/comment', $schedule->scheduleId) }}">
                                 {{ csrf_field() }}
                                 <textarea name="comment" placeholder="add comments"></textarea>
+                                <br>
+                                @if ($errors->has('comment'))
+                                    <span class="error">{{ $errors->first('comment') }}</span>
+                                @endif
                                 <br>
                                 <button type="submit" value="Update">Add Comment</button>
                             </form>
