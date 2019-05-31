@@ -38,8 +38,7 @@ class AvailabilityEditController extends Controller
 
     public function update(Request $request, $scheduleId) {
         $availabilities = Availability::where('scheduleId', $scheduleId)->get();
-        $count = 2;
-        dd($request->$count);
+        $count = 1;
          foreach($availabilities as $availability) {
             $availability->update(['availability' => $request->$count]);
             $count++;
