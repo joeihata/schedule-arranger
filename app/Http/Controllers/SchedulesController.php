@@ -27,7 +27,7 @@ class SchedulesController extends Controller
         $array = [];
         foreach ($candidates as $value) {
             $candidateName = $value->candidateName;
-            $availability = Schedule::findOrFail($scheduleId)->availabilities->first();
+            $availability = Candidate::findOrFail($value->candidateId)->availability;
             $availability = $availability->availability;
             $array[$candidateName] = $availability;
         }

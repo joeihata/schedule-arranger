@@ -11,7 +11,7 @@ class Candidate extends Model
           return $this->belongsTo('App\Schedule', 'ScheduleId', 'scheduleId');
      }
 
-     public function availabilities() {
-          return $this->hasMany('App\Availability', 'candidateId', 'candidateId');
+     public function availability() {
+          return $this->hasOne('App\Availability', 'candidateId', 'candidateId');
      }
 }

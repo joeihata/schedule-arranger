@@ -10,7 +10,7 @@
           <div class="panel panel-default">
               @if (Route::has('login'))
                 @auth
-                  <form method="post" action="{{ url('/', $schedule->scheduleId, $schedule->createdBy) }}">
+                  <form method="post" action="{{ url('/', $schedule->scheduleId) }}">
                     {{ csrf_field() }}
                     {{ method_field('patch') }}
                     <h4>ScheduleName : {{ $schedule->scheduleName }}</h4>
@@ -38,7 +38,7 @@
                                 </td>
                             </tr>
                             @php
-                              $count++
+                              $count++;
                             @endphp
                         @endforeach
                         <button type="submit" value="Update">Edit Availability</button>

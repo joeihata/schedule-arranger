@@ -36,16 +36,14 @@ class AvailabilityEditController extends Controller
             ]);
     }
 
-    public function update(Request $request, $scheduleId, $createdBy) {
-        $availabilities = Abailability::findOrFail($scheduleId)->where($createdBy);
-        dd($availabilities);
-        $count = 1;
+    public function update(Request $request, $scheduleId) {
+        $availabilities = Availability::where('scheduleId', $scheduleId)->get();
+        $count = 2;
+        dd($request->$count);
          foreach($availabilities as $availability) {
-             
-            $availability->update(['availability' => $count]);
+            $availability->update(['availability' => $request->$count]);
             $count++;
         }
-        
         return redirect('/home');
     }
 }
