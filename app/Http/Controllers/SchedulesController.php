@@ -13,44 +13,46 @@ use Webpatser\Uuid\Uuid;
 
 class SchedulesController extends Controller
 {
+
     public function index() {
         $schedules = Schedule::latest()->get();
         return view('home')->with('schedules', $schedule);
     }
-
+    
+    //詳細ページの情報を取得し表示するための処理
     public function show($scheduleId) {
         $schedule = Schedule::findOrFail($scheduleId);
         $user = User::findOrFail(Auth::id());
-        $candidates = Schedule::findOrFail($scheduleId)->candidates;
-        $availabilities = Schedule::findOrFail($scheduleId)->availabilities;
-        $comment = Schedule::findOrFail($scheduleId)->comments;
-        $array = [];
-        foreach ($candidates as $value) {
-            $candidateName = $value->candidateName;
-            $availability = Candidate::findOrFail($value->candidateId)->availability;
-            $availability = $availability->availability;
-            $array[$candidateName] = $availability;
+        $candidates = $schedule->candidates;
+        $availabilities = $schedule->availabilities;
+        $comment = $schedule->comments;
+        $candidateAvailabilityArray = [];
+        foreach ($candidates as $candidate) {
+            $candidateName = $candidate->candidateName;
+            $availability = Candidate::findOrFail($candidate->candidateId)->availability->availability;
+            $candidateAvailabilityArray[$candidateName] = $availability;
         }
         return view('show')->with([
             'schedule' => $schedule,
-            'candidate' => $candidates,
             'user' => $user,
-            'availability' => $availabilities,
-            'array' => $array,
+            'candidateAvailabilityArray' => $candidateAvailabilityArray,
             'comment' => $comment
             ]);
     }
 
+    //スケジュール調整自体を削除したい時の処理
     public function destroy($scheduleId) {
         $schedule = Schedule::findOrFail($scheduleId);
         $schedule->delete();
         return redirect('/home');
     }
 
+    //新しいスケジュールを作る時のページ情報を返す処理
     public function create() {
         return view('new');
     }
 
+    //スケジュールを新しく作成する時の処理
     public function store(Request $request) {
         $this->validate($request, [
             'scheduleName' => 'required',
@@ -59,43 +61,33 @@ class SchedulesController extends Controller
         ]);
         $schedule = new Schedule();
             $schedule->scheduleId = Uuid::generate()->string;
-            $rows = explode("\r\n", $request->candidates);
             $schedule->scheduleName = $request->scheduleName;
             $schedule->memo = $request->memo;
             $schedule->createdBy = Auth::user();
             $schedule->save();
-            foreach($rows as $value) {
+            $candidatesRows = explode("\r\n", $request->candidates);
+            foreach($candidatesRows as $newCandidate) {
                 $candidate = new Candidate();
-                    $candidate->candidateName = $value;
+                    $candidate->candidateName = $newCandidate;
                     $candidate->scheduleId = $schedule->scheduleId;
                     $candidate->save();
                 $availability = new Availability();
-                    $user = User::findOrFail(Auth::id());                    
+                    $user = User::findOrFail(Auth::id());
                     $availability->candidateId = $candidate->candidateId;
                     $availability->userId = $user->id;
-                    $availability->availability = '欠席';
+                    $availability->availability = config('const.DEFAULT_VALUE');
                     $availability->scheduleId = $schedule->scheduleId;
                     $availability->save();
             }
         return redirect('/home');
     }
 
+    //編集画面までのデータ処理
     public function edit($scheduleId) {
-        $this->validate($request, [
-            'scheduleName' => 'required',
-            'memo' => 'required',
-            'candidates' => 'required',
-        ]);
         $schedule = Schedule::findOrFail($scheduleId);
         $user = User::findOrFail(Auth::id());
-        $candidates = Schedule::findOrFail($scheduleId)->candidates;
-        $availabilities = Schedule::findOrFail($scheduleId)->availabilities;
-        $availabilityArray = [];
-        foreach ($candidates as $value) {
-            $availabilityArray = $value->candidateName;
-            $availability = Candidate::findOrFail($value->candidateId)->availability;
-            $availabilityArray = $availability->availability;
-        }
+        $candidates = $schedule->candidates;
+        $availabilities = $schedule->availabilities;    
         return view('edit')->with([
             'schedule' => $schedule,
             'candidate' => $candidates,
@@ -104,24 +96,24 @@ class SchedulesController extends Controller
             ]);
     }
 
+    //編集の処理
     public function update(Request $request, $scheduleId) {
-        //$schedule->scheduleId = Uuid::generate()->string;
-        $rows = explode("\r\n", $request->candidates);
         $schedule = Schedule::findOrFail($scheduleId);
-        $schedule->scheduleName = $request->scheduleName;
-        $schedule->memo = $request->memo;
-        $schedule->createdBy = Auth::id();
-        $schedule->save();
-        foreach($rows as $value) {
+            $schedule->scheduleName = $request->scheduleName;
+            $schedule->memo = $request->memo;
+            $schedule->createdBy = Auth::id();
+            $schedule->save();
+        $user = User::findOrFail(Auth::id());
+        $candidatesRows = explode("\r\n", $request->candidates);
+        foreach($candidatesRows as $newCandidate) {
             $candidate = new Candidate();
-                $candidate->candidateName = $value;
+                $candidate->candidateName = $newCandidate;
                 $candidate->scheduleId = $schedule->scheduleId;
                 $candidate->save();
-                $user = User::findOrFail(Auth::id());
             $availability = new Availability();
                 $availability->candidateId = $candidate->candidateId;
                 $availability->userId = $user->id;
-                $availability->availability = 0;
+                $availability->availability = config('const.DEFAULT_VALUE');
                 $availability->scheduleId = $schedule->scheduleId;
                 $availability->save();
         }

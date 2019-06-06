@@ -19,19 +19,19 @@ class AvailabilityEditController extends Controller
         $candidates = Schedule::findOrFail($scheduleId)->candidates;
         $availabilities = Schedule::findOrFail($scheduleId)->availabilities;
         $comment = Schedule::findOrFail($scheduleId)->comments;
-        $array = [];
-        foreach ($candidates as $value) {
-            $candidateName = $value->candidateName;
+        $candidateAvailabilityArray = [];
+        foreach ($candidates as $newCandidate) {
+            $candidateName = $newCandidate->candidateName;
             $availability = Schedule::findOrFail($scheduleId)->availabilities->first();
             $availability = $availability->availability;
-            $array[$candidateName] = $availability;
+            $candidateAvailabilityArray[$candidateName] = $availability;
         }
         return view('availabilityEdit')->with([
             'schedule' => $schedule,
             'candidate' => $candidates,
             'user' => $user,
             'availability' => $availabilities,
-            'array' => $array,
+            'candidateAvailabilityArray' => $candidateAvailabilityArray,
             'comment' => $comment
             ]);
     }
@@ -39,8 +39,9 @@ class AvailabilityEditController extends Controller
     public function update(Request $request, $scheduleId) {
         $availabilities = Availability::where('scheduleId', $scheduleId)->get();
         $count = 1;
-         foreach($availabilities as $availability) {
-            $availability->update(['availability' => $request->$count]);
+        foreach($availabilities as $availability) {
+            $availabilityValue = $request->$count;
+            $availability->update(['availability' => $availabilityValue ]);
             $count++;
         }
         return redirect('/home');

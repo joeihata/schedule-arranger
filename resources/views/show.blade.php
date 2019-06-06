@@ -19,19 +19,19 @@
                                 <a href="{{ action('AvailabilityEditController@edit', $schedule) }}" class="edit">[ Availability edit ]</a>
                             </th>
                         </tr>
-                        @foreach ($array as $key => $value)
+                        @foreach ($candidateAvailabilityArray as $candidate => $availability)
                             <tr>
-                                <td><p>{{ $key}}</p></td>
+                                <td><p>{{ $candidate }}</p></td>
                                 <td>
-                                    <p>{{ $value }}</p>
+                                    <p>{{ $availability }}</p>
                                 </td>
                             </tr>
                         @endforeach
                         <td></td>
                         <td>
                         @if ($comment)
-                            @foreach( $comment as $value)
-                                <p>{{ $value->comment }}</p><br>
+                            @foreach( $comment as $userComment)
+                                <p>{{ $userComment->comment }}</p><br>
                             @endforeach
                             <form method="post" action="{{ url('/post/comment', $schedule->scheduleId) }}">
                                 {{ csrf_field() }}

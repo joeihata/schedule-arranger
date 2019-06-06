@@ -10,7 +10,7 @@
           <div class="panel panel-default">
               @if (Route::has('login'))
                 @auth
-                  <form method="post" action="{{ url('/', $schedule->scheduleId) }}">
+                  <form method="post" action="{{ url('/attend', $schedule->scheduleId) }}">
                     {{ csrf_field() }}
                     {{ method_field('patch') }}
                     <h4>ScheduleName : {{ $schedule->scheduleName }}</h4>
@@ -26,9 +26,9 @@
                         @php
                           $count = 1;
                         @endphp
-                        @foreach ($array as $key => $value)
+                        @foreach ($candidateAvailabilityArray as $candidateName => $availability)
                             <tr>
-                                <td><p>{{ $key }}</p></td>
+                                <td><p>{{ $candidateName }}</p></td>
                                 <td>
                                   <select name="{{ $count }}">
                                     <option value="欠席">欠席</option>
@@ -42,7 +42,8 @@
                             @endphp
                         @endforeach
                         <button type="submit" value="Update">Edit Availability</button>
-                    </table> 
+                      </table> 
+                    </form>
                 @else
                   <a href="{{ route('login') }}">Login</a>
                   <a href="{{ route('register') }}">Register</a>
